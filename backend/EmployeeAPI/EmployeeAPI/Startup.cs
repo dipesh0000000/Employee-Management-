@@ -34,7 +34,9 @@ namespace EmployeeAPI
             services.AddControllers();
             services.AddDbContext<ApplicationDbContext>(item => item.UseSqlServer("Server=localhost; Database=EmployeeDb; Integrated Security=True;TrustServerCertificate=True"));
             services.AddTransient<IQualification, QualificationRepository>();
+            services.AddTransient<IEmployee, EmployeeRepository>();
             services.AddSwaggerGen();
+            services.AddAutoMapper(typeof(Startup));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -73,8 +75,10 @@ namespace EmployeeAPI
                 endpoints.MapControllers();
             });
             app.UseSwagger();
-            app.UseSwaggerUI(c => {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Showing API V1");
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.RoutePrefix = "docs";
             });
 
 

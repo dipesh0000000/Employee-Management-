@@ -1,11 +1,14 @@
 ﻿using EmployeeAPI.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace EmployeeAPI.Data
 {
     public class ApplicationDbContext : DbContext
     {
         public DbSet<Qualification> Qualifications { get; set; }
+        public DbSet<Employee> Employee { get; set; }
+        public DbSet<EmployeeQualification> EmployeeQualifications { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
         { }
@@ -21,25 +24,25 @@ namespace EmployeeAPI.Data
                 {
                     Id = 1,
                     Name = "School Leaving Certificate",
-                    Alias = "SLC"
+                    Alias = "SLC",
                 },
                 new Qualification
                 {
                     Id = 2,
                     Name = "Higher Secondary School",
-                    Alias = "10 +2"
+                    Alias = "10 +2",
                 },
                 new Qualification
                 {
                     Id = 3,
                     Name = "Bachelor",
-                    Alias = "Bachelor"
+                    Alias = "Bachelor",
                 },
                 new Qualification
                 {
                     Id = 4,
                     Name = "Master",
-                    Alias = "Master"
+                    Alias = "Master",
                 });
         }
     }

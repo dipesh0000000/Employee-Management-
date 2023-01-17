@@ -1,9 +1,20 @@
 import React, { useState,useEffect } from "react";
 
-function EmployeeList({trigger}){
+function EmployeeList(props){
+    const {
+            trigger,
+            fetchingEmployeeQualification,
+            employeeName,
+            salary,
+            address,
+            setQualifications,
+            selectedEmployeeId,
+            setSelectedEmployeeId,
+            resetValue
+        } = props;
+
     const [employeeList,setEmployeeList] = useState([]);
     const [fetchingData, setFetchingData] = useState(false);
-    const [selectedEmployeeId, setSelectedEmployeeId] = useState(null);
     const fetchEmployee = () => {
         setFetchingData(true);
         return fetch("https://localhost:44398/Employee")
@@ -15,27 +26,30 @@ function EmployeeList({trigger}){
         });
     };
 
-    const deleteEmployee = (id,index) => {
-        if(window.confirm("Do you want to delete this employee?")){
-            const requestOptions = {
-                method: 'DELETE',
-                headers: {  'Accept': 'application/json','Content-Type': 'application/json' },
+    const fetchEmployeeQualification = (id,index,details)=> {
+        fetchingEmployeeQualification(true)
+        setSelectedEmployeeId(id);
+        setQualifications([]);
+        return fetch("https://localhost:44398/Employee/"+id)
+        .then((response) => response.json())
+        .then((data) => 
+        {
+            employeeName(details.name);
+            address(details.address);
+            salary(details.salary);
+            setQualifications(data.map(element => {
+            var obj = {
+                QualificationId: element.qualificationId,
+                QualficationName: element.qualificationName,
+                Marks: parseInt(element.marks),
+                Remarks: element.remarks,
             };
-            return fetch("https://localhost:44398/Employee/"+id,requestOptions).then((response) => response.json())
-            .then((data) => 
-            {
-                fetchEmployee();
-                //check if data is fetching from api or is on edit need to reset our input field.
-                //call reset everything.
-            });
-        }
+            return obj;
+           }));
+           fetchingEmployeeQualification(false);
+        });
     };
 
-    const fetchEmployeeQualification = (id,index)=> {
-        setSelectedEmployeeId(id);
-        //Fetch api for employee qualification
-    };
-    
     useEffect(() => {
         fetchEmployee();
     },[]);
@@ -46,7 +60,6 @@ function EmployeeList({trigger}){
         }
       }, [trigger]);
 
-    
     return (
         <>
         {
@@ -60,17 +73,18 @@ function EmployeeList({trigger}){
                     <p>No employee List</p> :
                     employeeList.map((x,i) => 
                     <a  
-                    className={x.id === selectedEmployeeId 
+                        className={x.id === selectedEmployeeId 
                         ? "list-group-item list-group-item-action active" : "list-group-item list-group-item-action" }
-                        onClick={() =>fetchEmployeeQualification(x.id,i)}
+                        onClick={() =>{
+                            fetchEmployeeQualification(x.id,i,x)
+                        }}
                          id={i} style={{cursor: "pointer"}} key={i}>{x.name}
-                        <i className="bi bi-x-circle-fill" style={{ float: "right"}} title="Remove Employee" onClick={()=> deleteEmployee(x.id)}></i>
                     </a>
                 )}
             </div>
         }
         <hr></hr>
-        <button type="button" className="btn btn-primary" style={{float: "right"}}>Reset</button>
+        <button type="button" className="btn btn-primary" style={{float: "right"}} onClick={()=> resetValue()}>Reset</button>
 
       </>
     );

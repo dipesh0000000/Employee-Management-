@@ -139,13 +139,13 @@ namespace EmployeeAPI.Repository
                     emp.Address = employee.Address;
                     emp.Salary = employee.Salary;
                     _context.Employee.Update(emp);
-                    _context.SaveChanges();
                     _context.EmployeeQualifications.RemoveRange(_context.EmployeeQualifications.Where(x => x.EmployeeId == emp.Id).ToList());
-                    foreach (var qualification in emp.EmployeeQualifications)
+                    _context.SaveChanges();
+                    foreach (var qualification in employee.Qualifications)
                     {
                         var qual = new EmployeeQualification()
                         {
-                            QualificationId = qualification.Id,
+                            QualificationId = qualification.QualificationId,
                             EmployeeId = emp.Id,
                             Marks = qualification.Marks,
                             Remarks = qualification.Remarks,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-export default function EmployeeQualification({employeeQualificationList,setEmployeeQualificationList}){
+export default function EmployeeQualification({employeeQualificationList,setEmployeeQualificationList,trigger}){
     const [qualification, setQualification] = useState([]);
     const [marks , setMarks] = useState('');
     const [remarks, setRemarks] = useState('');
@@ -111,6 +111,14 @@ export default function EmployeeQualification({employeeQualificationList,setEmpl
         setQualificationUpdateIndexId(null);
         setButtonText('Add');
     };
+
+    useEffect(() => {
+        if (trigger) {
+            resetValue();
+        }
+      }, [trigger]);
+
+    
     return (
         <>
        <div className="containter" style={{paddingTop: "20px"}}>
